@@ -69,7 +69,6 @@ function buildChapter1() {
     var content = document.createElement('div');
     content.id = 'task-content-' + task.id;
     card.appendChild(content);
-    task.build(content);
 
     // Feedback
     var fb = document.createElement('div');
@@ -78,6 +77,9 @@ function buildChapter1() {
     card.appendChild(fb);
 
     wrap.appendChild(card);
+
+    // Build AFTER card is in DOM
+    task.build(content);
   });
 
   updateStars(0);
