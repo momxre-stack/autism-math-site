@@ -1,515 +1,218 @@
 :root {
-  --color1: #FF6B35;
-  --color2: #4ECDC4;
-  --color3: #FFD166;
-  --color4: #06D6A0;
-  --color5: #EF476F;
-  --bg: #FFF9F0;
-  --radius: 20px;
-  --shadow: 0 6px 24px rgba(0,0,0,0.10);
+  --orange: #FF6B35;
+  --teal:   #4ECDC4;
+  --yellow: #FFD166;
+  --green:  #06D6A0;
+  --red:    #EF476F;
+  --purple: #9B59B6;
+  --blue:   #3498DB;
+  --bg:     #FFF9F0;
+  --card:   #FFFFFF;
+  --text:   #2D3436;
+  --muted:  #636E72;
+  --r:      20px;
+  --sh:     0 6px 24px rgba(0,0,0,0.09);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;min-height:100vh;background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text);}
 
-html, body {
-  width: 100%;
-  min-height: 100vh;
-  background: var(--bg);
-  font-family: 'Nunito', sans-serif;
-  overflow-x: hidden;
-}
+/* SCREENS */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:block;}
 
-/* ─── SCREENS ─── */
-.screen {
-  display: none;
-  min-height: 100vh;
-}
-.screen.active {
-  display: block;
-}
+/* ── HOME ── */
+.home-wrap{max-width:480px;margin:0 auto;padding:32px 20px 60px;}
+.home-top{text-align:center;margin-bottom:32px;}
+.home-star{font-size:56px;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.1);}}
+.home-title{font-family:'Fredoka One',sans-serif;font-size:clamp(26px,7vw,44px);color:var(--orange);margin-top:8px;}
+.home-sub{font-size:18px;color:var(--teal);font-weight:700;margin-top:2px;}
+.lang-row{display:flex;gap:10px;justify-content:center;margin-top:18px;}
+.lang-btn{padding:9px 20px;border:2.5px solid #dfe6e9;border-radius:50px;background:white;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Nunito',sans-serif;}
+.lang-btn.active{border-color:var(--orange);background:var(--orange);color:white;}
 
-/* ─── HOME ─── */
-.home-bg {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-.cloud {
-  position: absolute;
-  font-size: 60px;
-  opacity: 0.18;
-  animation: float 6s ease-in-out infinite;
-}
-.c1 { top: 8%; left: 5%; animation-delay: 0s; }
-.c2 { top: 20%; right: 8%; font-size: 80px; animation-delay: 2s; }
-.c3 { bottom: 30%; left: 15%; animation-delay: 4s; }
+/* CHAPTERS GRID */
+.chapters-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.ch-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 10px;border:none;border-radius:var(--r);background:white;box-shadow:var(--sh);cursor:pointer;transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;}
+.ch-btn::after{content:'';position:absolute;top:0;left:0;width:100%;height:5px;}
+.ch-btn:nth-child(1)::after{background:var(--orange);}
+.ch-btn:nth-child(2)::after{background:var(--teal);}
+.ch-btn:nth-child(3)::after{background:var(--yellow);}
+.ch-btn:nth-child(4)::after{background:var(--green);}
+.ch-btn:nth-child(5)::after{background:var(--red);}
+.ch-btn:nth-child(6)::after{background:var(--purple);}
+.ch-btn:not(.locked):hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,0.13);}
+.ch-num{font-family:'Fredoka One',sans-serif;font-size:48px;line-height:1;color:var(--text);}
+.ch-name{font-size:13px;font-weight:700;color:var(--muted);}
+.ch-progress{font-size:11px;color:var(--orange);font-weight:800;}
+.ch-lock{font-size:16px;}
+.ch-btn.locked{opacity:.45;cursor:not-allowed;}
 
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
-}
+/* ── LESSON HEADER ── */
+.lesson-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;position:sticky;top:0;z-index:100;}
+.back-btn{background:rgba(255,255,255,.25);border:none;border-radius:12px;padding:8px 14px;font-size:18px;color:white;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:700;}
+.back-btn:hover{background:rgba(255,255,255,.4);}
+.hdr-center{display:flex;align-items:center;gap:10px;color:white;}
+.hdr-label{font-size:14px;font-weight:700;opacity:.9;}
+.hdr-num{font-family:'Fredoka One',sans-serif;font-size:38px;line-height:1;}
+.hdr-stars{font-size:22px;letter-spacing:2px;}
 
-.home-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 20px 60px;
-  gap: 32px;
-}
+/* ── TASKS WRAP ── */
+.tasks-wrap{max-width:520px;margin:0 auto;padding:20px 16px 80px;display:flex;flex-direction:column;gap:20px;}
 
-.home-title-wrap {
-  text-align: center;
-}
-.home-emoji {
-  font-size: 64px;
-  animation: pulse 2s ease-in-out infinite;
-}
-@keyframes pulse {
-  0%,100%{ transform: scale(1); }
-  50%{ transform: scale(1.08); }
-}
-.home-title {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: clamp(28px, 7vw, 48px);
-  color: var(--color1);
-  line-height: 1.1;
-  margin-top: 8px;
-}
-.home-subtitle {
-  font-size: clamp(16px, 4vw, 22px);
-  color: var(--color2);
-  font-weight: 700;
-  margin-top: 4px;
-}
+/* ── TASK CARD ── */
+.task-card{background:white;border-radius:var(--r);padding:22px 20px;box-shadow:var(--sh);transition:opacity .4s;}
+.task-card.locked{opacity:.35;pointer-events:none;}
+.task-card.unlocking{animation:slideUp .4s ease forwards;}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
 
-/* ─── NUMBER GRID ─── */
-.number-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  width: 100%;
-  max-width: 400px;
-}
+.task-badge{display:inline-flex;align-items:center;gap:6px;background:var(--orange);color:white;font-size:12px;font-weight:800;padding:4px 12px;border-radius:20px;margin-bottom:10px;font-family:'Fredoka One',sans-serif;}
+.task-card:nth-child(even) .task-badge{background:var(--teal);}
+.task-card:nth-child(3n) .task-badge{background:var(--red);}
 
-.num-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  padding: 16px 8px;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: var(--shadow);
-  background: white;
-  position: relative;
-  overflow: hidden;
-}
-.num-btn::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 5px;
-}
-.num-btn:nth-child(1)::before { background: var(--color1); }
-.num-btn:nth-child(2)::before { background: var(--color2); }
-.num-btn:nth-child(3)::before { background: var(--color3); }
-.num-btn:nth-child(4)::before { background: var(--color4); }
-.num-btn:nth-child(5)::before { background: var(--color5); }
-.num-btn:nth-child(6)::before { background: #a29bfe; }
+.task-title{font-family:'Fredoka One',sans-serif;font-size:21px;color:var(--text);margin-bottom:3px;}
+.task-hint{font-size:14px;color:var(--muted);margin-bottom:16px;}
 
-.num-btn:not(.locked):hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.14); }
-.num-btn:not(.locked):active { transform: scale(0.96); }
+/* ── FEEDBACK ── */
+.task-fb{min-height:34px;text-align:center;font-family:'Fredoka One',sans-serif;font-size:20px;margin-top:12px;}
+.task-fb.ok{color:var(--green);}
+.task-fb.err{color:var(--red);}
 
-.num-big {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 52px;
-  line-height: 1;
-  color: #2d3436;
-}
-.num-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #636e72;
-}
+/* ── BUTTONS ── */
+.big-btn{display:inline-block;padding:13px 28px;border:none;border-radius:50px;font-size:17px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;}
+.big-btn.primary{background:var(--orange);color:white;box-shadow:0 4px 16px rgba(255,107,53,.35);}
+.big-btn.primary:hover{background:#e85a24;transform:translateY(-2px);}
+.big-btn.secondary{background:#f0f0f0;color:#555;}
+.big-btn.secondary:hover{background:#e0e0e0;}
+.btn-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
 
-.num-btn.locked {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-.num-btn.locked::after {
-  content: '🔒';
-  position: absolute;
-  top: 6px; right: 8px;
-  font-size: 14px;
-}
+/* ── TASK 1: APPLE ── */
+.apple-area{display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;padding:8px 0;}
+#apple-svg{cursor:pointer;filter:drop-shadow(0 4px 10px rgba(0,0,0,.1));transition:transform .15s;}
+#apple-svg:hover{transform:scale(1.06);}
+#apple-svg:active{transform:scale(.97);}
+.num-hero{font-family:'Fredoka One',sans-serif;font-size:100px;color:#e74c3c;line-height:1;filter:drop-shadow(3px 4px 0 rgba(0,0,0,.08));transition:opacity .4s,transform .3s;}
 
-/* ─── LANG SWITCH ─── */
-.lang-switch {
-  display: flex;
-  gap: 10px;
-}
-.lang-btn {
-  padding: 10px 20px;
-  border: 2.5px solid #dfe6e9;
-  border-radius: 50px;
-  background: white;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-family: 'Nunito', sans-serif;
-}
-.lang-btn.active {
-  border-color: var(--color1);
-  background: var(--color1);
-  color: white;
-}
+/* ── TASK 2: CANVAS ── */
+.color-row{display:flex;gap:10px;justify-content:center;margin-bottom:14px;flex-wrap:wrap;}
+.col-dot{width:36px;height:36px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:transform .15s,border-color .15s;}
+.col-dot:hover{transform:scale(1.2);}
+.col-dot.active{border-color:#2d3436;transform:scale(1.15);}
+.canvas-wrap{position:relative;width:220px;height:240px;margin:0 auto;}
+#draw-canvas{position:absolute;top:0;left:0;border:2px dashed var(--yellow);border-radius:14px;background:#fffef7;cursor:crosshair;touch-action:none;}
+.canvas-guide{position:absolute;top:0;left:0;pointer-events:none;}
 
-/* ─── LESSON HEADER ─── */
-.lesson-header {
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.back-btn {
-  background: rgba(255,255,255,0.25);
-  border: none;
-  border-radius: 12px;
-  padding: 8px 14px;
-  font-size: 15px;
-  font-weight: 700;
-  color: white;
-  cursor: pointer;
-  font-family: 'Nunito', sans-serif;
-  white-space: nowrap;
-}
-.back-btn:hover { background: rgba(255,255,255,0.4); }
+/* ── TASK 3: PIGS ── */
+.animals-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:8px 0;}
+.animal-btn{background:#f8f9fa;border:3px solid #e9ecef;border-radius:18px;padding:12px 14px;cursor:pointer;transition:all .2s;font-size:50px;line-height:1;}
+.animal-btn:hover{transform:scale(1.1);border-color:var(--yellow);background:#fff9e6;}
+.animal-btn.correct{border-color:var(--green);background:#e8fff8;animation:bounce .4s ease;}
+.animal-btn.wrong{border-color:var(--red);background:#fff0f3;animation:shake .35s ease;}
+@keyframes bounce{0%,100%{transform:scale(1);}40%{transform:scale(1.25);}}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
 
-.lesson-header-title {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 22px;
-  color: white;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.header-num {
-  font-size: 36px;
-  line-height: 1;
-}
+/* ── TASK 4: CHERRIES ── */
+.cherries-row{display:flex;gap:16px;justify-content:center;align-items:flex-end;flex-wrap:wrap;padding:8px 0;}
+.cherry-group{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;padding:10px;border-radius:16px;border:3px solid transparent;transition:all .2s;}
+.cherry-group:hover{border-color:var(--yellow);background:#fffbf0;}
+.cherry-emoji{font-size:36px;}
+.cherry-count{font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--muted);}
+.cherry-group.correct{border-color:var(--green);background:#e8fff8;animation:bounce .4s ease;}
+.cherry-group.wrong{border-color:var(--red);animation:shake .35s ease;}
 
-.stars-wrap {
-  display: flex;
-  gap: 4px;
-}
-.star {
-  font-size: 24px;
-  transition: all 0.3s;
-}
-.star.earned {
-  animation: starPop 0.4s ease forwards;
-}
-@keyframes starPop {
-  0%{ transform: scale(0); }
-  60%{ transform: scale(1.4); }
-  100%{ transform: scale(1); }
-}
+/* ── TASK 5: FIND 1s ── */
+.numgrid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:8px 0;}
+.numgrid-btn{width:52px;height:52px;border-radius:12px;border:3px solid #e9ecef;background:#f8f9fa;font-family:'Fredoka One',sans-serif;font-size:26px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.numgrid-btn:hover{border-color:var(--yellow);transform:scale(1.05);}
+.numgrid-btn.found{border-color:var(--green);background:#e8fff8;color:var(--green);}
+.numgrid-btn.wrong{border-color:var(--red);background:#fff0f3;animation:shake .3s ease;}
 
-/* ─── LESSON BODY ─── */
-.lesson-body {
-  padding: 20px 16px 80px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 500px;
-  margin: 0 auto;
-}
+/* ── TASK 6: TRACE ── */
+.trace-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:8px 0;}
+.trace-cell{border:2px solid #e9ecef;border-radius:10px;height:52px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',sans-serif;font-size:28px;color:#bbb;cursor:pointer;transition:all .2s;user-select:none;}
+.trace-cell.sample{background:#fff3ee;border-color:var(--orange);color:var(--orange);}
+.trace-cell.filled{background:#e8fff8;border-color:var(--green);color:var(--green);}
+.trace-cell:not(.sample):hover{border-color:var(--teal);background:#f0fffe;}
 
-/* ─── TASK CARD ─── */
-.task-card {
-  background: white;
-  border-radius: var(--radius);
-  padding: 22px 20px;
-  box-shadow: var(--shadow);
-  transition: opacity 0.4s, transform 0.4s;
-  position: relative;
-}
-.task-card.unlocked {
-  animation: slideIn 0.4s ease forwards;
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+/* ── TASK 7: WRITE ── */
+.write-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:8px 0;}
+.write-cell{border:2px solid #e9ecef;border-radius:10px;height:52px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',sans-serif;font-size:26px;cursor:pointer;background:white;transition:all .2s;color:transparent;}
+.write-cell.sample{background:#fff3ee;border-color:var(--orange);color:var(--orange);}
+.write-cell.written{background:#e8f4ff;border-color:var(--blue);color:var(--blue);animation:pop .25s ease;}
+@keyframes pop{0%{transform:scale(.7);}60%{transform:scale(1.15);}100%{transform:scale(1);}}
 
-.task-badge {
-  width: 36px;
-  height: 36px;
-  background: var(--color1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 18px;
-  color: white;
-  margin-bottom: 10px;
-}
-#task2 .task-badge { background: var(--color2); }
-#task3 .task-badge { background: var(--color5); }
+/* ── TASK 8: COINS ── */
+.coins-row{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;padding:8px 0;}
+.coin-btn{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 18px;border-radius:18px;border:3px solid transparent;cursor:pointer;background:#f8f9fa;transition:all .2s;}
+.coin-btn:hover{border-color:var(--yellow);background:#fffbf0;transform:scale(1.05);}
+.coin-emoji{font-size:52px;}
+.coin-label{font-family:'Fredoka One',sans-serif;font-size:16px;color:var(--muted);}
+.coin-btn.correct{border-color:var(--green);background:#e8fff8;animation:bounce .4s ease;}
+.coin-btn.wrong{border-color:var(--red);animation:shake .35s ease;}
 
-.task-title {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 22px;
-  color: #2d3436;
-  margin-bottom: 4px;
-}
-.task-hint {
-  font-size: 15px;
-  color: #636e72;
-  margin-bottom: 16px;
-}
+/* ── TASK 9: CANDY ── */
+.candy-row{display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap;padding:8px 0;}
+.candy-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 16px;border-radius:16px;border:3px solid transparent;cursor:pointer;background:#f8f9fa;transition:all .2s;}
+.candy-item:hover{border-color:var(--yellow);background:#fffbf0;transform:scale(1.05);}
+.candy-emoji{font-size:48px;}
+.candy-price{font-family:'Fredoka One',sans-serif;font-size:18px;color:var(--muted);}
+.candy-item.correct{border-color:var(--green);background:#e8fff8;animation:bounce .4s ease;}
+.candy-item.wrong{border-color:var(--red);animation:shake .35s ease;}
 
-/* ─── TASK 1 APPLE ─── */
-.task1-area {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-  flex-wrap: wrap;
-  padding: 8px 0;
-}
-.apple-wrap {
-  position: relative;
-  display: inline-block;
-}
-#apple-svg {
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.12));
-  transition: transform 0.15s;
-}
-#apple-svg:hover { transform: scale(1.05); }
-#apple-svg:active { transform: scale(0.97); }
+/* ── TASK 10: BIRDS ── */
+.birds-area{display:flex;gap:20px;justify-content:center;align-items:flex-start;flex-wrap:wrap;padding:8px 0;}
+.bird-group{display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bird-emojis{font-size:40px;line-height:1.2;}
+.bird-box{width:60px;height:44px;border:2.5px solid #e9ecef;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',sans-serif;font-size:22px;cursor:pointer;background:white;transition:all .2s;color:transparent;}
+.bird-box:hover{border-color:var(--teal);background:#f0fffe;}
+.bird-box.filled{border-color:var(--green);background:#e8fff8;color:var(--green);}
 
-.apple-pulse {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  border: 4px solid var(--color1);
-  opacity: 0;
-  animation: pulsering 2s ease-out infinite;
-}
-@keyframes pulsering {
-  0% { transform: translate(-50%,-50%) scale(0.6); opacity: 0.8; }
-  100% { transform: translate(-50%,-50%) scale(1.2); opacity: 0; }
-}
+/* ── TASK 11: GRID MATCH ── */
+.match-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:8px 0;}
+.match-cell{border:2.5px dashed #e9ecef;border-radius:14px;padding:10px;min-height:70px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',sans-serif;font-size:28px;color:var(--muted);cursor:pointer;transition:all .2s;background:white;}
+.match-cell:hover{border-color:var(--teal);background:#f0fffe;}
+.match-cell.placed{border-color:var(--green);background:#e8fff8;border-style:solid;animation:pop .3s ease;}
+.match-cell.has-num{cursor:default;}
+.match-target{display:flex;flex-direction:column;align-items:center;gap:4px;}
+.match-num{font-size:28px;color:var(--orange);}
+.match-slot{width:44px;height:44px;border:2.5px dashed #ccc;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;background:white;transition:all .2s;}
+.match-slot:hover{border-color:var(--teal);}
+.match-slot.filled{border-color:var(--green);background:#e8fff8;}
+.cards-row{display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap;}
+.drag-card{padding:8px 14px;background:var(--orange);color:white;border-radius:12px;font-family:'Fredoka One',sans-serif;font-size:22px;cursor:pointer;transition:all .2s;border:none;}
+.drag-card:hover{transform:scale(1.1);background:#e85a24;}
+.drag-card.used{opacity:.3;pointer-events:none;}
 
-.num-display-big {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 110px;
-  color: #e74c3c;
-  line-height: 1;
-  filter: drop-shadow(3px 4px 0px rgba(0,0,0,0.10));
-  transition: all 0.3s;
-  opacity: 0.15;
-}
+/* ── TASK 12: ONE vs MANY ── */
+.ovm-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;padding:8px 0;}
+.ovm-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 14px;border-radius:16px;border:3px solid transparent;cursor:pointer;background:#f8f9fa;transition:all .2s;}
+.ovm-item:hover{border-color:var(--yellow);background:#fffbf0;transform:scale(1.05);}
+.ovm-emoji{font-size:44px;line-height:1.2;}
+.ovm-item.correct{border-color:var(--green);background:#e8fff8;animation:bounce .4s ease;}
+.ovm-item.wrong{border-color:var(--red);animation:shake .35s ease;}
 
-/* ─── TASK 2 DRAW ─── */
-.color-row {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin-bottom: 14px;
-}
-.col-dot {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 3px solid transparent;
-  cursor: pointer;
-  transition: transform 0.15s, border-color 0.15s;
-}
-.col-dot:hover { transform: scale(1.2); }
-.col-dot.active {
-  border-color: #2d3436;
-  transform: scale(1.15);
-}
+/* ── TASK 13: CIRCLES ── */
+.circles-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;padding:8px 0;}
+.circle-item{width:80px;height:80px;border-radius:50%;border:4px solid #e9ecef;cursor:pointer;background:white;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:28px;}
+.circle-item:hover{border-color:var(--yellow);transform:scale(1.1);}
+.circle-item.colored{animation:bounce .4s ease;}
 
-.canvas-wrap {
-  position: relative;
-  display: block;
-  margin: 0 auto;
-  width: 240px;
-  height: 260px;
-}
-#draw-canvas {
-  position: absolute;
-  top: 0; left: 0;
-  border: 2px dashed #FFD166;
-  border-radius: 14px;
-  background: #fffef7;
-  cursor: crosshair;
-  touch-action: none;
-}
-.num-guide {
-  position: absolute;
-  top: 0; left: 0;
-  pointer-events: none;
-}
+/* ── WIN OVERLAY ── */
+.win-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:200;animation:fadeIn .3s ease;}
+.win-overlay.hidden{display:none;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.win-box{background:white;border-radius:28px;padding:44px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25);animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popIn{from{transform:scale(.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+.win-stars{font-size:44px;margin-bottom:6px;}
+.win-big{font-size:68px;}
+.win-title{font-family:'Fredoka One',sans-serif;font-size:30px;color:var(--orange);margin:10px 0 4px;}
+.win-sub{color:var(--muted);font-size:16px;margin-bottom:24px;}
 
-/* ─── TASK 3 PIGS ─── */
-.pigs-row {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
-  padding: 8px 0;
-}
-.pig-item {
-  background: #f8f9fa;
-  border: 3px solid #e9ecef;
-  border-radius: 18px;
-  padding: 14px 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 52px;
-  line-height: 1;
-}
-.pig-item:hover {
-  transform: scale(1.1);
-  border-color: var(--color3);
-  background: #fff9e6;
-}
-.pig-item.correct {
-  border-color: var(--color4);
-  background: #e8fff8;
-  animation: bounce 0.4s ease;
-}
-.pig-item.wrong {
-  border-color: var(--color5);
-  background: #fff0f3;
-  animation: shake 0.35s ease;
-}
-@keyframes bounce {
-  0%,100%{ transform: scale(1); }
-  40%{ transform: scale(1.25); }
-}
-@keyframes shake {
-  0%,100%{ transform: translateX(0); }
-  25%{ transform: translateX(-8px); }
-  75%{ transform: translateX(8px); }
-}
-
-/* ─── SHARED ─── */
-.task-feedback {
-  min-height: 36px;
-  text-align: center;
-  font-size: 20px;
-  font-weight: 800;
-  margin-top: 12px;
-  font-family: 'Fredoka One', sans-serif;
-}
-.task-feedback.good { color: var(--color4); }
-.task-feedback.bad { color: var(--color5); }
-
-.btn-row {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  margin-top: 14px;
-}
-.action-btn {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 50px;
-  font-size: 16px;
-  font-weight: 800;
-  cursor: pointer;
-  font-family: 'Nunito', sans-serif;
-  transition: all 0.15s;
-}
-.action-btn.primary {
-  background: var(--color1);
-  color: white;
-  box-shadow: 0 4px 14px rgba(255,107,53,0.35);
-}
-.action-btn.primary:hover { background: #e85a24; transform: translateY(-2px); }
-.action-btn.primary:active { transform: scale(0.97); }
-.action-btn.secondary {
-  background: #f0f0f0;
-  color: #555;
-}
-.action-btn.secondary:hover { background: #e0e0e0; }
-.action-btn.big {
-  font-size: 20px;
-  padding: 16px 36px;
-}
-
-/* ─── SUCCESS OVERLAY ─── */
-.success-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-  animation: fadeIn 0.3s ease;
-}
-.success-overlay.hidden { display: none; }
-@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-
-.success-box {
-  background: white;
-  border-radius: 28px;
-  padding: 40px 32px;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
-}
-@keyframes popIn {
-  from { transform: scale(0.5); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-.success-stars {
-  font-size: 40px;
-  margin-bottom: 8px;
-  animation: starSpin 0.6s ease 0.2s both;
-}
-@keyframes starSpin {
-  from { transform: rotate(-20deg) scale(0.5); opacity: 0; }
-  to { transform: rotate(0) scale(1); opacity: 1; }
-}
-.success-emoji { font-size: 64px; margin: 8px 0; }
-.success-title {
-  font-family: 'Fredoka One', sans-serif;
-  font-size: 28px;
-  color: var(--color1);
-  margin-bottom: 24px;
-}
-
-/* ─── RESPONSIVE ─── */
-@media (max-width: 400px) {
-  .number-grid { gap: 12px; }
-  .num-big { font-size: 42px; }
-  .task-title { font-size: 19px; }
-  .home-title { font-size: 26px; }
+/* RESPONSIVE */
+@media(max-width:380px){
+  .chapters-grid{grid-template-columns:repeat(2,1fr);}
+  .ch-num{font-size:40px;}
+  .task-title{font-size:18px;}
+  .num-hero{font-size:80px;}
 }

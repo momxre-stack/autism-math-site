@@ -1,7 +1,6 @@
 {
   "name": "autism-math-site",
-  "version": "1.0.0",
-  "description": "Interactive math learning for children with autism",
+  "version": "2.0.0",
   "scripts": {
     "start": "npx serve . -p ${PORT:-3000}"
   },

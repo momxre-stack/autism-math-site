@@ -1,33 +1,23 @@
-// ─── STATE ───────────────────────────────────────────
-var currentLang = 'ka';
-var task1Done = false;
-var task2Done = false;
-var task3Done = false;
-var pigPicked = false;
-var isDrawing = false;
-var drawColor = '#e74c3c';
-var starsEarned = 0;
+// ── STATE ─────────────────────────────────────────────
+var lang = 'ka';
+var completedTasks = 0;
 
-// ─── LANGUAGE ────────────────────────────────────────
-function setLang(lang) {
-  currentLang = lang;
+// ── LANGUAGE ──────────────────────────────────────────
+function setLang(l) {
+  lang = l;
   document.querySelectorAll('.lang-btn').forEach(function(b) {
-    b.classList.toggle('active', b.textContent.includes(lang === 'ka' ? 'ქართული' : 'English'));
+    var isKa = b.textContent.indexOf('ქართული') > -1;
+    b.classList.toggle('active', (l==='ka' && isKa) || (l==='en' && !isKa));
   });
   document.querySelectorAll('[data-ka]').forEach(function(el) {
-    el.textContent = lang === 'ka' ? el.getAttribute('data-ka') : el.getAttribute('data-en');
+    el.textContent = l === 'ka' ? el.getAttribute('data-ka') : el.getAttribute('data-en');
   });
 }
 
-// ─── NAVIGATION ──────────────────────────────────────
+// ── NAVIGATION ────────────────────────────────────────
 function goHome() {
   showScreen('screen-home');
-  document.getElementById('success-overlay').classList.add('hidden');
-}
-
-function goLesson(num) {
-  resetLesson(num);
-  showScreen('screen-lesson-' + num);
+  document.getElementById('win-overlay').classList.add('hidden');
 }
 
 function showScreen(id) {
@@ -38,227 +28,126 @@ function showScreen(id) {
   window.scrollTo(0, 0);
 }
 
-function resetLesson(num) {
-  if (num === 1) {
-    task1Done = false;
-    task2Done = false;
-    task3Done = false;
-    pigPicked = false;
-    starsEarned = 0;
-
-    // Reset apple
-    var body = document.getElementById('apple-body');
-    var leaf = document.getElementById('apple-leaf');
-    if (body) body.setAttribute('fill', '#ddd');
-    if (leaf) leaf.setAttribute('fill', '#bbb');
-    document.getElementById('num1-display').style.opacity = '0.15';
-    document.getElementById('fb-task1').textContent = '';
-    document.getElementById('fb-task1').className = 'task-feedback';
-
-    // Reset canvas
-    clearDraw();
-    document.getElementById('fb-task2').textContent = '';
-    document.getElementById('fb-task2').className = 'task-feedback';
-
-    // Reset pigs
-    document.querySelectorAll('.pig-item').forEach(function(p) {
-      p.classList.remove('correct', 'wrong');
-    });
-    pigPicked = false;
-    document.getElementById('fb-task3').textContent = '';
-    document.getElementById('fb-task3').className = 'task-feedback';
-
-    // Lock tasks 2 and 3
-    lockTask('task2');
-    lockTask('task3');
-
-    // Reset stars
-    starsEarned = 0;
-    for (var i = 1; i <= 3; i++) {
-      var star = document.getElementById('star' + i);
-      if (star) { star.textContent = '☆'; star.classList.remove('earned'); }
-    }
-  }
+function startChapter(n) {
+  if (n !== 1) return;
+  // reset tasks
+  TASKS.forEach(function(t) { t.done = false; });
+  completedTasks = 0;
+  buildChapter1();
+  showScreen('screen-ch1');
 }
 
-function unlockTask(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.style.opacity = '1';
-  el.style.pointerEvents = 'auto';
-  el.classList.add('unlocked');
-  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-}
+// ── BUILD CHAPTER 1 ───────────────────────────────────
+function buildChapter1() {
+  var wrap = document.getElementById('tasks-wrap');
+  wrap.innerHTML = '';
 
-function lockTask(id) {
-  var el = document.getElementById(id);
-  if (!el) return;
-  el.style.opacity = '0.4';
-  el.style.pointerEvents = 'none';
-  el.classList.remove('unlocked');
-}
+  TASKS.forEach(function(task, idx) {
+    var card = document.createElement('div');
+    card.className = 'task-card' + (idx === 0 ? '' : ' locked');
+    card.id = 'card-' + task.id;
 
-function earnStar() {
-  starsEarned++;
-  var star = document.getElementById('star' + starsEarned);
-  if (star) {
-    star.textContent = '⭐';
-    star.classList.add('earned');
-  }
-}
+    // Badge
+    var badge = document.createElement('div');
+    badge.className = 'task-badge';
+    badge.textContent = (lang === 'ka' ? 'დავალება ' : 'Task ') + task.id;
+    card.appendChild(badge);
 
-// ─── TASK 1: COLOR APPLE ─────────────────────────────
-function colorApple() {
-  if (task1Done) return;
-  task1Done = true;
+    // Title
+    var title = document.createElement('h2');
+    title.className = 'task-title';
+    title.textContent = lang === 'ka' ? task.title_ka : task.title_en;
+    card.appendChild(title);
 
-  var body = document.getElementById('apple-body');
-  var leaf = document.getElementById('apple-leaf');
-  body.setAttribute('fill', '#e74c3c');
-  leaf.setAttribute('fill', '#2ecc71');
+    // Hint
+    var hint = document.createElement('p');
+    hint.className = 'task-hint';
+    hint.textContent = lang === 'ka' ? task.hint_ka : task.hint_en;
+    card.appendChild(hint);
 
-  var numDisplay = document.getElementById('num1-display');
-  numDisplay.style.opacity = '1';
-  numDisplay.style.animation = 'none';
-  numDisplay.style.transition = 'opacity 0.4s, transform 0.4s';
-  setTimeout(function() {
-    numDisplay.style.transform = 'scale(1.2)';
-    setTimeout(function() { numDisplay.style.transform = 'scale(1)'; }, 200);
-  }, 10);
+    // Content container
+    var content = document.createElement('div');
+    content.id = 'task-content-' + task.id;
+    card.appendChild(content);
+    task.build(content);
 
-  var fb = document.getElementById('fb-task1');
-  fb.textContent = currentLang === 'ka' ? '🎉 ბრავო! სწორია!' : '🎉 Excellent! Correct!';
-  fb.className = 'task-feedback good';
+    // Feedback
+    var fb = document.createElement('div');
+    fb.className = 'task-fb';
+    fb.id = 'fb-' + task.id;
+    card.appendChild(fb);
 
-  // Stop pulse
-  var pulse = document.getElementById('apple-pulse');
-  if (pulse) pulse.style.animation = 'none';
-
-  earnStar();
-  setTimeout(function() { unlockTask('task2'); }, 700);
-}
-
-// ─── TASK 2: DRAW ────────────────────────────────────
-var canvas, ctx;
-
-function initCanvas() {
-  canvas = document.getElementById('draw-canvas');
-  if (!canvas) return;
-  ctx = canvas.getContext('2d');
-
-  canvas.addEventListener('mousedown', startDraw);
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', stopDraw);
-  canvas.addEventListener('mouseleave', stopDraw);
-  canvas.addEventListener('touchstart', startDraw, { passive: false });
-  canvas.addEventListener('touchmove', draw, { passive: false });
-  canvas.addEventListener('touchend', stopDraw);
-}
-
-function getPos(e) {
-  var r = canvas.getBoundingClientRect();
-  var scaleX = canvas.width / r.width;
-  var scaleY = canvas.height / r.height;
-  var src = e.touches ? e.touches[0] : e;
-  return {
-    x: (src.clientX - r.left) * scaleX,
-    y: (src.clientY - r.top) * scaleY
-  };
-}
-
-function startDraw(e) {
-  e.preventDefault();
-  isDrawing = true;
-  var p = getPos(e);
-  ctx.beginPath();
-  ctx.moveTo(p.x, p.y);
-}
-
-function draw(e) {
-  e.preventDefault();
-  if (!isDrawing) return;
-  var p = getPos(e);
-  ctx.lineTo(p.x, p.y);
-  ctx.strokeStyle = drawColor;
-  ctx.lineWidth = 20;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.stroke();
-}
-
-function stopDraw(e) {
-  isDrawing = false;
-}
-
-function pickColor(btn) {
-  drawColor = btn.getAttribute('data-color');
-  document.querySelectorAll('.col-dot').forEach(function(b) {
-    b.classList.remove('active');
+    wrap.appendChild(card);
   });
-  btn.classList.add('active');
+
+  updateStars(0);
 }
 
-function clearDraw() {
-  if (!canvas) return;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+// ── UNLOCK NEXT TASK ──────────────────────────────────
+function unlockNext(taskId) {
+  completedTasks++;
+  updateStars(completedTasks);
+  updateProgress();
+
+  var nextId = taskId + 1;
+  var nextCard = document.getElementById('card-' + nextId);
+  if (nextCard) {
+    nextCard.classList.remove('locked');
+    nextCard.classList.add('unlocking');
+    nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
 }
 
-function doneDrawing() {
-  if (task2Done) return;
-  task2Done = true;
-
-  var fb = document.getElementById('fb-task2');
-  fb.textContent = currentLang === 'ka' ? '🎨 შესანიშნავია!' : '🎨 Amazing work!';
-  fb.className = 'task-feedback good';
-
-  earnStar();
-  setTimeout(function() { unlockTask('task3'); }, 700);
-}
-
-// ─── TASK 3: PIGS ────────────────────────────────────
-function pickPig(btn, isCorrect) {
-  if (pigPicked) return;
-
-  if (isCorrect) {
-    pigPicked = true;
-    btn.classList.add('correct');
-
-    var fb = document.getElementById('fb-task3');
-    fb.textContent = currentLang === 'ka' ? '🐷 სწორია! ერთი გოჭი!' : '🐷 Correct! One pig!';
-    fb.className = 'task-feedback good';
-
-    earnStar();
-    setTimeout(function() { showSuccess(); }, 900);
+// ── FEEDBACK ──────────────────────────────────────────
+function showFb(taskId, ok, customMsg) {
+  var fb = document.getElementById('fb-' + taskId);
+  if (!fb) return;
+  if (ok) {
+    var msgs = ['🎉 ბრავო!', '⭐ სწორია!', '🌟 შესანიშნავია!', '✅ მშვენიერი!'];
+    var engMsgs = ['🎉 Amazing!', '⭐ Correct!', '🌟 Excellent!', '✅ Well done!'];
+    var pick = msgs[Math.floor(Math.random() * msgs.length)];
+    var pickEn = engMsgs[Math.floor(Math.random() * engMsgs.length)];
+    fb.textContent = lang === 'ka' ? pick : pickEn;
+    fb.className = 'task-fb ok';
   } else {
-    btn.classList.add('wrong');
-    var fb2 = document.getElementById('fb-task3');
-    fb2.textContent = currentLang === 'ka' ? '🙈 კიდევ სცადე!' : '🙈 Try again!';
-    fb2.className = 'task-feedback bad';
-    setTimeout(function() {
-      btn.classList.remove('wrong');
-      fb2.textContent = '';
-      fb2.className = 'task-feedback';
-    }, 800);
+    fb.textContent = customMsg || (lang === 'ka' ? '🙈 კიდევ სცადე!' : '🙈 Try again!');
+    fb.className = 'task-fb err';
   }
 }
 
-// ─── SUCCESS ─────────────────────────────────────────
-function showSuccess() {
-  var overlay = document.getElementById('success-overlay');
-  overlay.classList.remove('hidden');
-
-  // Update success text based on lang
-  var title = overlay.querySelector('.success-title');
-  if (title) {
-    title.textContent = currentLang === 'ka' ? 'ბრავო! გაიმარჯვე!' : 'Well done! You won!';
-  }
-  var homeBtn = overlay.querySelector('.action-btn span');
-  if (homeBtn) {
-    homeBtn.textContent = currentLang === 'ka' ? '🏠 მთავარი' : '🏠 Home';
-  }
+function clearFb(taskId) {
+  var fb = document.getElementById('fb-' + taskId);
+  if (fb) { fb.textContent = ''; fb.className = 'task-fb'; }
 }
 
-// ─── INIT ─────────────────────────────────────────────
+// ── STARS ─────────────────────────────────────────────
+function updateStars(done) {
+  var total = TASKS.length; // 13
+  var stars = '';
+  if (done >= Math.ceil(total / 3)) stars += '⭐'; else stars += '☆';
+  if (done >= Math.ceil(total * 2 / 3)) stars += '⭐'; else stars += '☆';
+  if (done >= total) stars += '⭐'; else stars += '☆';
+  var el = document.getElementById('hdr-stars');
+  if (el) el.textContent = stars;
+}
+
+// ── PROGRESS ──────────────────────────────────────────
+function updateProgress() {
+  var el = document.getElementById('prog-1');
+  if (el) el.textContent = completedTasks + '/13';
+}
+
+// ── WIN ───────────────────────────────────────────────
+function showWin() {
+  updateStars(13);
+  var ov = document.getElementById('win-overlay');
+  if (ov) ov.classList.remove('hidden');
+  // update text
+  ov.querySelector('.win-title').textContent = lang === 'ka' ? 'ბრავო! გაიმარჯვე!' : 'Amazing! You won!';
+  ov.querySelector('.win-sub').textContent = lang === 'ka' ? 'რიცხვი 1 ისწავლე! 🎊' : 'You learned number 1! 🎊';
+}
+
+// ── INIT ──────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function() {
-  initCanvas();
+  // nothing extra needed
 });

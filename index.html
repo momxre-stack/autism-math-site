@@ -5,167 +5,86 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>რიცხვების სამყარო • Number World</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- HOME SCREEN -->
+  <!-- HOME -->
   <div id="screen-home" class="screen active">
-    <div class="home-bg">
-      <div class="cloud c1">☁️</div>
-      <div class="cloud c2">☁️</div>
-      <div class="cloud c3">☁️</div>
-    </div>
-    <div class="home-content">
-      <div class="home-title-wrap">
-        <div class="home-emoji">🌟</div>
+    <div class="home-wrap">
+      <div class="home-top">
+        <div class="home-star">⭐</div>
         <h1 class="home-title">რიცხვების სამყარო</h1>
-        <p class="home-subtitle">Number World</p>
+        <p class="home-sub">Number World</p>
+        <div class="lang-row">
+          <button class="lang-btn active" onclick="setLang('ka')">🇬🇪 ქართული</button>
+          <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
+        </div>
       </div>
-
-      <div class="number-grid">
-        <button class="num-btn" onclick="goLesson(1)">
-          <span class="num-big">1</span>
-          <span class="num-label">ერთი</span>
+      <div class="chapters-grid">
+        <button class="ch-btn" onclick="startChapter(1)">
+          <span class="ch-num">1</span>
+          <span class="ch-name" data-ka="ერთი" data-en="One">ერთი</span>
+          <span class="ch-progress" id="prog-1">0/13</span>
         </button>
-        <button class="num-btn locked" onclick="goLesson(2)">
-          <span class="num-big">2</span>
-          <span class="num-label">ორი</span>
+        <button class="ch-btn locked">
+          <span class="ch-num">2</span>
+          <span class="ch-name" data-ka="ორი" data-en="Two">ორი</span>
+          <span class="ch-lock">🔒</span>
         </button>
-        <button class="num-btn locked" onclick="goLesson(3)">
-          <span class="num-big">3</span>
-          <span class="num-label">სამი</span>
+        <button class="ch-btn locked">
+          <span class="ch-num">3</span>
+          <span class="ch-name" data-ka="სამი" data-en="Three">სამი</span>
+          <span class="ch-lock">🔒</span>
         </button>
-        <button class="num-btn locked">
-          <span class="num-big">4</span>
-          <span class="num-label">ოთხი</span>
+        <button class="ch-btn locked">
+          <span class="ch-num">4</span>
+          <span class="ch-name" data-ka="ოთხი" data-en="Four">ოთხი</span>
+          <span class="ch-lock">🔒</span>
         </button>
-        <button class="num-btn locked">
-          <span class="num-big">5</span>
-          <span class="num-label">ხუთი</span>
+        <button class="ch-btn locked">
+          <span class="ch-num">5</span>
+          <span class="ch-name" data-ka="ხუთი" data-en="Five">ხუთი</span>
+          <span class="ch-lock">🔒</span>
         </button>
-        <button class="num-btn locked">
-          <span class="num-big">6</span>
-          <span class="num-label">ექვსი</span>
+        <button class="ch-btn locked">
+          <span class="ch-num">9</span>
+          <span class="ch-name" data-ka="ცხრა" data-en="Nine">ცხრა</span>
+          <span class="ch-lock">🔒</span>
         </button>
-      </div>
-
-      <div class="lang-switch">
-        <button class="lang-btn active" onclick="setLang('ka')">🇬🇪 ქართული</button>
-        <button class="lang-btn" onclick="setLang('en')">🇬🇧 English</button>
       </div>
     </div>
   </div>
 
-  <!-- LESSON SCREEN: NUMBER 1 -->
-  <div id="screen-lesson-1" class="screen">
-    <div class="lesson-header" style="background: var(--color1);">
-      <button class="back-btn" onclick="goHome()">← <span data-ka="მთავარი" data-en="Home">მთავარი</span></button>
-      <div class="lesson-header-title">
-        <span data-ka="შევისწავლოთ" data-en="Let's Learn">შევისწავლოთ</span>
-        <span class="header-num">1</span>
+  <!-- CHAPTER 1 -->
+  <div id="screen-ch1" class="screen">
+    <div class="lesson-header" style="background:var(--orange)">
+      <button class="back-btn" onclick="goHome()">←</button>
+      <div class="hdr-center">
+        <span class="hdr-label" data-ka="შევისწავლოთ რიცხვი" data-en="Let's learn number">შევისწავლოთ რიცხვი</span>
+        <span class="hdr-num">1</span>
       </div>
-      <div class="stars-wrap" id="stars-1">
-        <span class="star" id="star1">☆</span>
-        <span class="star" id="star2">☆</span>
-        <span class="star" id="star3">☆</span>
-      </div>
+      <div class="hdr-stars" id="hdr-stars">☆☆☆</div>
     </div>
 
-    <div class="lesson-body">
-
-      <!-- TASK 1: Color the apple -->
-      <div class="task-card" id="task1">
-        <div class="task-badge">
-          <span>1</span>
-        </div>
-        <h2 class="task-title" data-ka="ვაშლი გაფერადე!" data-en="Color the apple!">ვაშლი გაფერადე!</h2>
-        <p class="task-hint" data-ka="დააჭირე ვაშლს 🖍️" data-en="Tap the apple 🖍️">დააჭირე ვაშლს 🖍️</p>
-
-        <div class="task1-area">
-          <div class="apple-wrap">
-            <svg id="apple-svg" width="160" height="170" viewBox="0 0 160 170"
-                 onclick="colorApple()" style="cursor:pointer;" role="button" aria-label="apple">
-              <path id="apple-stem" d="M80 32 Q86 14 98 10" stroke="#8B4513" stroke-width="4" fill="none" stroke-linecap="round"/>
-              <path id="apple-leaf" d="M88 22 Q104 14 100 28 Q92 34 84 26 Z" fill="#bbb" id="leaf"/>
-              <ellipse id="apple-body" cx="80" cy="100" rx="56" ry="62" fill="#ddd" id="body"/>
-              <ellipse cx="60" cy="78" rx="10" ry="7" fill="rgba(255,255,255,0.18)"/>
-            </svg>
-            <div class="apple-pulse" id="apple-pulse"></div>
-          </div>
-          <div class="num-display-big" id="num1-display">1</div>
-        </div>
-
-        <div class="task-feedback" id="fb-task1"></div>
-      </div>
-
-      <!-- TASK 2: Draw/color the number -->
-      <div class="task-card" id="task2" style="opacity:0.4;pointer-events:none;">
-        <div class="task-badge"><span>2</span></div>
-        <h2 class="task-title" data-ka="რიცხვი 1 დახატე!" data-en="Draw the number 1!">რიცხვი 1 დახატე!</h2>
-        <p class="task-hint" data-ka="ფერი აირჩიე და დახატე ✏️" data-en="Pick a color and draw ✏️">ფერი აირჩიე და დახატე ✏️</p>
-
-        <div class="color-row">
-          <button class="col-dot active" style="background:#e74c3c;" data-color="#e74c3c" onclick="pickColor(this)"></button>
-          <button class="col-dot" style="background:#f39c12;" data-color="#f39c12" onclick="pickColor(this)"></button>
-          <button class="col-dot" style="background:#2ecc71;" data-color="#2ecc71" onclick="pickColor(this)"></button>
-          <button class="col-dot" style="background:#3498db;" data-color="#3498db" onclick="pickColor(this)"></button>
-          <button class="col-dot" style="background:#9b59b6;" data-color="#9b59b6" onclick="pickColor(this)"></button>
-        </div>
-
-        <div class="canvas-wrap">
-          <canvas id="draw-canvas" width="240" height="260" aria-label="drawing area"></canvas>
-          <svg class="num-guide" width="240" height="260" viewBox="0 0 240 260" style="pointer-events:none;">
-            <text x="120" y="210" text-anchor="middle" font-size="200" font-family="Fredoka One,sans-serif"
-                  fill="rgba(0,0,0,0.07)" font-weight="900">1</text>
-          </svg>
-        </div>
-
-        <div class="btn-row">
-          <button class="action-btn secondary" onclick="clearDraw()" data-ka="გასუფთავება" data-en="Clear">გასუფთავება</button>
-          <button class="action-btn primary" onclick="doneDrawing()" data-ka="✅ მზადაა!" data-en="✅ Done!">✅ მზადაა!</button>
-        </div>
-        <div class="task-feedback" id="fb-task2"></div>
-      </div>
-
-      <!-- TASK 3: Pick one pig -->
-      <div class="task-card" id="task3" style="opacity:0.4;pointer-events:none;">
-        <div class="task-badge"><span>3</span></div>
-        <h2 class="task-title" data-ka="ერთი გოჭი შეარჩიე!" data-en="Pick ONE pig!">ერთი გოჭი შეარჩიე!</h2>
-        <p class="task-hint" data-ka="შემოხაზე მხოლოდ 1 გოჭი 🐷" data-en="Circle only 1 pig 🐷">შემოხაზე მხოლოდ 1 გოჭი 🐷</p>
-
-        <div class="pigs-row" id="pigs-row">
-          <button class="pig-item" onclick="pickPig(this,false)" aria-label="pig">
-            <span class="pig-emoji">🐷</span>
-          </button>
-          <button class="pig-item" onclick="pickPig(this,false)" aria-label="pig">
-            <span class="pig-emoji">🐷</span>
-          </button>
-          <button class="pig-item correct-pig" onclick="pickPig(this,true)" aria-label="pig">
-            <span class="pig-emoji">🐷</span>
-          </button>
-        </div>
-
-        <div class="task-feedback" id="fb-task3"></div>
-      </div>
-
-    </div><!-- /lesson-body -->
-
-    <!-- SUCCESS OVERLAY -->
-    <div id="success-overlay" class="success-overlay hidden">
-      <div class="success-box">
-        <div class="success-stars">⭐⭐⭐</div>
-        <div class="success-emoji">🎉</div>
-        <h2 class="success-title" data-ka="ბრავო! გაიმარჯვე!" data-en="Well done! You won!">ბრავო! გაიმარჯვე!</h2>
-        <button class="action-btn primary big" onclick="goHome()">
-          <span data-ka="🏠 მთავარი" data-en="🏠 Home">🏠 მთავარი</span>
-        </button>
-      </div>
+    <div class="tasks-wrap" id="tasks-wrap">
+      <!-- tasks injected by JS -->
     </div>
 
-  </div><!-- /lesson-1 -->
+    <!-- WIN OVERLAY -->
+    <div id="win-overlay" class="win-overlay hidden">
+      <div class="win-box">
+        <div class="win-stars">⭐⭐⭐</div>
+        <div class="win-big">🎉</div>
+        <h2 class="win-title" data-ka="ბრავო! გაიმარჯვე!" data-en="Amazing! You won!">ბრავო! გაიმარჯვე!</h2>
+        <p class="win-sub" data-ka="რიცხვი 1 ისწავლე!" data-en="You learned number 1!">რიცხვი 1 ისწავლე!</p>
+        <button class="big-btn" onclick="goHome()">🏠 <span data-ka="მთავარი" data-en="Home">მთავარი</span></button>
+      </div>
+    </div>
+  </div>
 
+  <script src="tasks.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
